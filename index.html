@@ -91,7 +91,8 @@
     <div class="notice">
       <h2 class="notice__title">Ваше объявление</h2>
 
-      <form class="notice__form notice__form--disabled" method="post" enctype="multipart/form-data" autocomplete="off">
+      <form class="notice__form notice__form--disabled" method="post" enctype="multipart/form-data" autocomplete="off"
+        action="https://js.dump.academy/keksobooking">
         <fieldset class="notice__header">
           <legend>Ваша фотография (для карты)</legend>
           <div class="notice__photo">
@@ -109,13 +110,13 @@
         </fieldset>
 
         <fieldset class="form__element form__element--wide">
-          <label for="title">Заголовок объявления</label>
+          <label for="title">Заголовок объявления *</label>
           <input id="title" name="title" type="text" placeholder="Милая, уютная квартирка в центре Токио">
         </fieldset>
 
         <fieldset class="form__element form__element--wide">
           <label for="address">Адрес</label>
-          <input id="address" name="address" type="text">
+          <input id="address" name="address" type="text" required>
         </fieldset>
 
         <fieldset class="form__element">
@@ -129,8 +130,8 @@
         </fieldset>
 
         <fieldset class="form__element">
-          <label for="price">Цена за ночь, руб.</label>
-          <input id="price" name="price" type="number" placeholder="5000">
+          <label for="price">Цена за ночь, руб. *</label>
+          <input id="price" name="price" type="number" placeholder="1000">
         </fieldset>
 
         <fieldset class="form__element">
@@ -182,8 +183,8 @@
           <input type="checkbox" name="features" value="washer" id="feature-washer">
           <label class="feature feature--washer" for="feature-washer">Стиральная машина</label>
 
-          <input type="checkbox" name="features" value="elevator" id="feature-washer">
-          <label class="feature feature--elevator" for="feature-washer">Лифт</label>
+          <input type="checkbox" name="features" value="elevator" id="feature-elevator">
+          <label class="feature feature--elevator" for="feature-elevator">Лифт</label>
 
           <input type="checkbox" name="features" value="conditioner" id="feature-conditioner">
           <label class="feature feature--conditioner" for="feature-conditioner">Кондиционер</label>

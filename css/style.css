@@ -543,6 +543,10 @@ textarea:focus {
   background-color: #ff5635;
 }
 
+.notice__form input:invalid {
+  border: 1px solid red;
+}
+
 .notice__form .feature--wifi {
   background-position: 4px -303px;
 }
