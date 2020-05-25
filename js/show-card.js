@@ -1,4 +1,4 @@
-window.addLeftPopup = function (somePin, isRewrite) { // добавить попап слева на карте и слушатели на закрытие
+window.showCard = function (somePin, isRewrite) { // добавить попап слева на карте и слушатели на закрытие
   let popup = window.map.mapSection.querySelector(`.popup`);
 
   if (!isRewrite) {
@@ -11,7 +11,7 @@ window.addLeftPopup = function (somePin, isRewrite) { // добавить поп
   popup.querySelector(`h4`).textContent = somePin.offer.type;
   popup.querySelector(`p:nth-of-type(3)`).textContent = `${somePin.offer.rooms} комнаты для ${somePin.offer.guests} гостей`;
   popup.querySelector(`p:nth-of-type(4)`).textContent = `Заезд после ${somePin.offer.checkin}, выезд до ${somePin.offer.checkout}`;
-  // popup.querySelector('p:nth-of-type(5)').textContent = somePin.offer.description;
+  popup.querySelector(`p:nth-of-type(5)`).textContent = somePin.offer.description;
   popup.querySelector(`img`).src = somePin.author.avatar;
 
   let popupFeatures = popup.querySelector(`.popup__features`);
@@ -19,13 +19,18 @@ window.addLeftPopup = function (somePin, isRewrite) { // добавить поп
 
   for (let i = 0; i < somePin.offer.features.length; i++) {
     let li = document.createElement(`li`);
-    let liClass = `feature--` + somePin.offer.features[i].name;
+    let liClass = `feature--` + somePin.offer.features[i];
     li.classList.add(`feature`, liClass);
-    li.setAttribute(`title`, somePin.offer.features[i].title);
+    // li.setAttribute(`title`, somePin.offer.features[i].title);
     popupFeatures.appendChild(li);
   }
   // eslint-disable-next-line no-unused-expressions
   !isRewrite ? window.map.mapSection.appendChild(popup) : false;
+
+  let closeButton = popup.querySelector(`.popup__close`);
+  closeButton.addEventListener(`click`, onCloseButtonClick);
+  document.addEventListener(`keydown`, onPopupEscPress);
+  closeButton.addEventListener(`keydown`, onEnterPress);
 
   function onCloseButtonClick() {
     popup.remove();
@@ -44,8 +49,4 @@ window.addLeftPopup = function (somePin, isRewrite) { // добавить поп
       onCloseButtonClick();
     }
   }
-  let closeButton = popup.querySelector(`.popup__close`);
-  closeButton.addEventListener(`click`, onCloseButtonClick);
-  document.addEventListener(`keydown`, onPopupEscPress);
-  closeButton.addEventListener(`keydown`, onEnterPress);
 };

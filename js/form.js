@@ -9,16 +9,29 @@
   let formTimeout = window.map.noticeForm.querySelector(`.form__element #timeout`);
   let formRoomsNumber = window.map.noticeForm.querySelector(`.form__element #room_number`);
   let formGuests = window.map.noticeForm.querySelector(`.form__element #capacity`);
+  let formDescription = window.map.noticeForm.querySelector(`.form__element #description`);
+  let submitButton = window.map.noticeForm.querySelector(`.form__submit`);
 
   formTitle.minLength = `30`;
   formTitle.maxLength = `100`;
   formAddress.required = true;
   formAddress.readOnly = true;
+  clearForm();
 
   formTitle.addEventListener(`focus`, onFormValidation);
   formTitle.addEventListener(`blur`, onFormValidation);
   formPricePerNight.addEventListener(`focus`, onFormValidation);
   formPricePerNight.addEventListener(`blur`, onFormValidation);
+
+  formTypes.addEventListener(`change`, checkTypes);
+  formRoomsNumber.addEventListener(`change`, syncGuests);
+  formTimein.addEventListener(`change`, onTimeSelect);
+  formTimeout.addEventListener(`change`, onTimeSelect);
+
+  submitButton.addEventListener(`mousedown`, onFormValidation);
+  window.map.noticeForm.addEventListener(`submit`, onSubmit);
+  window.map.noticeForm.addEventListener(`reset`, clearForm);
+
 
   function onFormValidation(evt) {
     switch (evt.type) {
@@ -30,82 +43,61 @@
     }
   }
 
-  formPricePerNight.min = `1000`;
-  formPricePerNight.max = `1000000`;
-  formTypes.addEventListener(`change`, checkTypes);
   function checkTypes() {
-    for (let i = 0; i < formTypes.children.length; i++) {
-      if (formTypes[i].selected) {
-        if (formTypes.children[i].textContent.match(`Лачуга`)) {
-          formPricePerNight.min = `0`;
-        } else if (formTypes.children[i].textContent.match(`Квартира`)) {
-          formPricePerNight.min = `1000`;
-        } else if (formTypes.children[i].textContent.match(`Дом`)) {
-          formPricePerNight.min = `5000`;
-        } else if (formTypes.children[i].textContent.match(`Дворец`)) {
-          formPricePerNight.min = `10000`;
-        }
-      }
-    }
+    let minWorthes = [`0`, `1000`, `5000`, `10000`];
+    let setMinWorth = (minValue) => formPricePerNight.min = minValue;
+    window.synchronizeFields(formTypes, minWorthes, setMinWorth);
   }
 
-  let formTimeinChildren = formTimein.children;
-  let formTimeoutChildren = formTimeout.children;
-  formTimein.addEventListener(`change`, syncTime);
-  formTimeout.addEventListener(`change`, syncTime);
-  function syncTime(evt) {
+  function onTimeSelect(evt) {
+    let syncTimeInOut = (anotherChild) => anotherChild.selected = true;
 
     if (evt.target === formTimein) {
-      toSync(formTimeinChildren, formTimeoutChildren);
+      window.synchronizeFields(formTimein.children, formTimeout.children, syncTimeInOut);
     } else if (evt.target === formTimeout) {
-      toSync(formTimeoutChildren, formTimeinChildren);
-    }
-
-    function toSync(childrens, anotherChilds) {
-      for (let i = 0; i < childrens.length; i++) {
-        if (childrens[i].selected) {
-          anotherChilds[i].selected = true;
-          break;
-        }
-      }
+      window.synchronizeFields(formTimeout.children, formTimein.children, syncTimeInOut);
     }
   }
 
-  syncGuests();
-  formRoomsNumber.addEventListener(`change`, syncGuests);
   function syncGuests() { // синхронизируем количество комнат и гостей
     formGuests.innerHTML = `
-      <option value="3">для 3 гостей</option>
-      <option value="2">для 2 гостей</option>
       <option value="1">для 1 гостя</option>
+      <option value="2">для 2 гостей</option>
+      <option value="3">для 3 гостей</option>
       <option value="0">не для гостей</option>
     `;
+    window.synchronizeFields(formRoomsNumber.children, formGuests.children, delGuestsExcept);
+  }
 
-    for (let i = 0; i < formRoomsNumber.children.length; i++) {
-      if (formRoomsNumber.children[i].selected) {
-        switch (formRoomsNumber.children[i].textContent) {
-          case `1 комната`: deleteOtherGuestsExcept(`для 1 гостя`); break;
-          case `2 комнаты`: deleteOtherGuestsExcept(`для 1 гостя`, `для 2 гостей`); break;
-          case `3 комнаты`: deleteOtherGuestsExcept(`для 1 гостя`, `для 2 гостей`, `для 3 гостей`); break;
-          case `100 комнат`: deleteOtherGuestsExcept(`не для гостей`); break;
-        }
-        break;
+  function delGuestsExcept(theGuest, i, guestsArray) {
+    theGuest.selected = true;
+
+    if (theGuest.textContent === `не для гостей`) {
+      formGuests.innerHTML = `<option value="0">не для гостей</option>`;
+    } else {
+      for (let k = i + 1; k < guestsArray.length; k++) {
+        guestsArray[k].remove();
+        k--;
       }
-    }
-
-    function deleteOtherGuestsExcept(except1, except2, except3) {
-      for (let i = 0; i < formGuests.children.length; i++) {
-        let currentGuest = formGuests.children[i].textContent;
-        if (currentGuest !== except1 && currentGuest !== except2 && currentGuest !== except3) {
-          formGuests.children[i].remove();
-          i--;
-        }
-      }
-
-      formGuests.children[0].selected = true;
     }
   }
 
-  window.map.noticeForm.querySelector(`.form__submit`).addEventListener(`mousedown`, onFormValidation);
+  function clearForm() {
+    formTitle.value = ``;
+    formPricePerNight.value = ``;
+    formPricePerNight.min = `1000`;
+    formPricePerNight.max = `1000000`;
+    formTypes.children[1].selected = true;
+    formRoomsNumber.children[0].selected = true;
+    syncGuests();
+    formDescription.value = ``;
+  }
 
+  function onSubmit(evt) {
+    evt.preventDefault();
+    if (formTitle.validity.valid && formPricePerNight.validity.valid) {
+      window.upload(window.pin.errorHandler, new FormData(window.map.noticeForm), clearForm);
+    }
+  }
 }());
+

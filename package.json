@@ -18,16 +18,16 @@
   },
   "eslintConfig": {
     "parserOptions": {
-        "ecmaVersion": 6,
-        "sourceType": "module"
+      "ecmaVersion": 6,
+      "sourceType": "module"
     },
     "env": {
-        "browser": true,
-        "es6": true
+      "browser": true,
+      "es6": true
     },
     "extends": "htmlacademy/es6",
-        "rules": {
-        //"quotes": "off"
+    "rules": {
+    	"no-return-assign": "off"
     }
-  } 
+  }
 }

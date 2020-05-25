@@ -92,7 +92,7 @@
       <h2 class="notice__title">Ваше объявление</h2>
 
       <form class="notice__form notice__form--disabled" method="post" enctype="multipart/form-data" autocomplete="off"
-        action="https://js.dump.academy/keksobooking">
+        action="https://javascript.pages.academy/keksobooking">
         <fieldset class="notice__header">
           <legend>Ваша фотография (для карты)</legend>
           <div class="notice__photo">
@@ -116,14 +116,14 @@
 
         <fieldset class="form__element form__element--wide">
           <label for="address">Адрес</label>
-          <input id="address" name="address" type="text" required>
+          <input id="address" name="address" type="text" value="X: 600           Y: 424" required>
         </fieldset>
 
         <fieldset class="form__element">
           <label for="type">Тип жилья</label>
           <select id="type" name="type">
-            <option value="flat" selected>Квартира</option>
             <option value="bungalo">Лачуга</option>
+            <option value="flat" selected>Квартира</option>
             <option value="house">Дом</option>
             <option value="palace">Дворец</option>
           </select>
@@ -161,9 +161,9 @@
         <fieldset class="form__element">
           <label for="capacity">Количество мест</label>
           <select id="capacity" name="capacity">
-            <option value="3" selected>для 3 гостей</option>
+            <option value="1" selected>для 1 гостя</option>
             <option value="2">для 2 гостей</option>
-            <option value="1">для 1 гостя</option>
+            <option value="3">для 3 гостей</option>
             <option value="0">не для гостей</option>
           </select>
         </fieldset>
@@ -263,10 +263,12 @@
   </template>
 
   <script src="js/random.js"></script>
+  <script src="js/backend.js"></script>
   <script src="js/data.js"></script>
   <script src="js/pin.js"></script>
+  <script src="js/show-card.js"></script>
+  <script src="js/synchronize-fields.js"></script>
   <script src="js/map.js"></script>
-  <script src="js/card.js"></script>
   <script src="js/form.js"></script>
 </body>
 

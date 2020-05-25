@@ -1,5 +1,6 @@
 window.data = {
-  objects: []
+  objects: [],
+  loadedPins: null
 };
 
 ((quantity, emptyArray) => { // создать рандомные 8 объектов и добавить их все в массив строкой выше

@@ -11,25 +11,22 @@ window.ENTER_KEYCODE = 13;
     currentPinActive: null
   };
 
-  // слушатели на метки
-  let formSections = window.map.noticeForm.querySelectorAll(`fieldset`);
-  formSections.forEach((fieldset) => { // сначала добавил disabled потом убираем по событию
-    fieldset.disabled = true;
-  });
+
   let mainPinButton = window.map.mapSection.querySelector(`.map__pin--main`);
   mainPinButton.addEventListener(`mouseover`, onMainPinMouseover);
-  window.map.pinList.addEventListener(`click`, window.pin.onRandomPinClick);
-
+  // сначала добавляю disabled потом убираем по событию
+  let formSections = window.map.noticeForm.querySelectorAll(`fieldset`);
+  formSections.forEach((fieldset) => fieldset.disabled = true);
 
   function onMainPinMouseover() { // убираем затемнение с карты, артибуты disabled, ставим слушатели на Enter
     window.map.mapSection.classList.remove(`map--faded`);
     window.map.noticeForm.classList.remove(`notice__form--disabled`);
-    formSections.forEach((fieldset) => {
-      fieldset.disabled = false;
-    });
-    window.pin.addRandomPins();
-    mainPinButton.removeEventListener(`mouseover`, onMainPinMouseover);
+    formSections.forEach((fieldset) => fieldset.disabled = false);
 
+    window.pin.loadPinsOnMap(window.data.loadedPins); // Ставим скаченные пины на карту
+
+    mainPinButton.removeEventListener(`mouseover`, onMainPinMouseover);
+    window.map.pinList.addEventListener(`click`, window.pin.onRandomPinClick);
     for (let i = 0; i < window.map.pinList.children.length; i++) {
       window.map.pinList.children[i].addEventListener(`keydown`, window.pin.onRandomPinClick);
     }
