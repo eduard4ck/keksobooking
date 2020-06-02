@@ -2,14 +2,14 @@ window.pin = {
   loadPinsOnMap(pins) { // добавить метки на карту закачанные через xhr
     let pinTemplate = window.map.template.querySelector(`.map__pin`);
     let fragment = document.createDocumentFragment();
-    for (let i = 0; i < pins.length; i++) {
+    pins.forEach((pin) => {
       let newPin = pinTemplate.cloneNode(true);
-      newPin.style.left = `${pins[i].location.x}px`;
-      newPin.style.top = `${pins[i].location.y}px`;
-      newPin.backendName = pins[i].offer.title;
-      newPin.querySelector(`img`).src = pins[i].author.avatar;
+      newPin.style.left = `${pin.location.x}px`;
+      newPin.style.top = `${pin.location.y}px`;
+      newPin.backendName = pin.offer.title;
+      newPin.querySelector(`img`).src = pin.author.avatar;
       fragment.appendChild(newPin);
-    }
+    });
     window.map.pinList.appendChild(fragment);
   },
 
@@ -27,7 +27,7 @@ window.pin = {
   },
 
   onRandomPinClick(evt) { // при клике на метку, узнаем есть ли предыдущий попап
-    let target = evt.keyCode === window.ENTER_KEYCODE ? evt.target : evt.target.parentNode;
+    let target = evt.keyCode === Keyboard.ENTER_KEYCODE ? evt.target : evt.target.parentNode;
 
     if (target.classList.contains(`map__pin`) && !target.classList.contains(`map__pin--main`)) {
 
@@ -37,23 +37,9 @@ window.pin = {
       window.map.currentPinActive = target;
       target.classList.add(`map__pin--active`);
 
-      let backendName = !(evt.keyCode === window.ENTER_KEYCODE)
-        ? evt.target.parentNode.backendName
-        : evt.backendName;
-
-      let isRewrite = false;
-
-      let lastChildClassList = window.map.mapSection.lastChild.classList;
-      if (lastChildClassList && lastChildClassList.contains(`popup`)) {
-        isRewrite = true;
-      }
-
-      for (let i = 0; i < window.data.loadedPins.length; i++) {
-        if (window.data.loadedPins[i].offer.title.match(backendName)) {
-          window.showCard(window.data.loadedPins[i], isRewrite);
-          break;
-        }
-      }
+      let backendName = target.backendName;
+      let activePin = window.data.loadedPins.find((pin) => pin.offer.title.match(backendName));
+      window.showCard(activePin);
     }
   }
 };

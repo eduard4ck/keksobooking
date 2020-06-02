@@ -54,35 +54,36 @@
 
           <select name="housing-rooms" id="housing-rooms" class="map__filter">
             <option value="any" selected>Любое число комнат</option>
-            <option value="1">Одна комната</option>
-            <option value="2">Две комнаты</option>
-            <option value="3">Три комнаты</option>
+            <option value="1r">Одна комната</option>
+            <option value="2r">Две комнаты</option>
+            <option value="3r">Три комнаты</option>
           </select>
 
           <select name="housing-guests" id="housing-guests" class="map__filter">
             <option value="any" selected>Любое число гостей</option>
-            <option value="1">Один гость</option>
-            <option value="2">Два гостя</option>
+            <option value="1g">Один гость</option>
+            <option value="2g">Два гостя</option>
           </select>
 
           <fieldset id="housing-features" class="map__filter-set features">
             <input type="checkbox" name="features" value="wifi" id="filter-wifi">
-            <label class="feature feature--wifi" for="filter-wifi">Wi-Fi</label>
+            <label class="feature feature--wifi" for="filter-wifi" title="wifi">Wi-Fi</label>
 
             <input type="checkbox" name="features" value="dishwasher" id="filter-dishwasher">
-            <label class="feature feature--dishwasher" for="filter-dishwasher">Посудомоечная машина</label>
+            <label class="feature feature--dishwasher" for="filter-dishwasher" title="dishwasher">Посудомоечная
+              машина</label>
 
             <input type="checkbox" name="features" value="parking" id="filter-parking">
-            <label class="feature feature--parking" for="filter-parking">Парковка</label>
+            <label class="feature feature--parking" for="filter-parking" title="parking">Парковка</label>
 
             <input type="checkbox" name="features" value="washer" id="filter-washer">
-            <label class="feature feature--washer" for="filter-washer">Стиральная машина</label>
+            <label class="feature feature--washer" for="filter-washer" title="washer">Стиральная машина</label>
 
             <input type="checkbox" name="features" value="elevator" id="filter-elevator">
-            <label class="feature feature--elevator" for="filter-elevator">Лифт</label>
+            <label class="feature feature--elevator" for="filter-elevator" title="elevator">Лифт</label>
 
             <input type="checkbox" name="features" value="conditioner" id="filter-conditioner">
-            <label class="feature feature--conditioner" for="filter-conditioner">Кондиционер</label>
+            <label class="feature feature--conditioner" for="filter-conditioner" title="conditioner">Кондиционер</label>
           </fieldset>
         </form>
       </div>
@@ -269,6 +270,7 @@
   <script src="js/show-card.js"></script>
   <script src="js/synchronize-fields.js"></script>
   <script src="js/map.js"></script>
+  <script src="js/sort-pins.js"></script>
   <script src="js/form.js"></script>
 </body>
 

@@ -44,9 +44,9 @@
   }
 
   function checkTypes() {
-    let minWorthes = [`0`, `1000`, `5000`, `10000`];
-    let setMinWorth = (minValue) => formPricePerNight.min = minValue;
-    window.synchronizeFields(formTypes, minWorthes, setMinWorth);
+    let minPrices = [`0`, `1000`, `5000`, `10000`];
+    let setMinPrice = (minValue) => formPricePerNight.min = minValue;
+    window.synchronizeFields(formTypes, minPrices, setMinPrice);
   }
 
   function onTimeSelect(evt) {

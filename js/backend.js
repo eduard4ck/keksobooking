@@ -1,46 +1,35 @@
+window.Code = {
+  SUCCESS: 200,
+  CACHED: 302,
+  WRONG_REQ: 400,
+  NOT_AUTH: 401,
+  NOT_FOUND_ERROR: 404,
+  SERVER_ERROR: 500
+};
+
 (function () {
-  let URL = `https://javascript.pages.academy/keksobooking`;
   window.upload = function (onError, data, onLoad) {
-    let xhr = new XMLHttpRequest();
-    xhr.responseType = `json`;
-
-    xhr.addEventListener(`load`, function () {
-      switch (xhr.status) {
-        case 200: onLoad(); break;
-        case 400: onError(`400 Неверный запрос`); break;
-        case 401: onError(`401 Пользователь не авторизован`); break;
-        case 404: onError(`404 Ничего не найдено`); break;
-        default: onError(`Неизвестный статус ${xhr.status} ${xhr.statustext}`);
-      }
-    });
-
-    xhr.addEventListener(`error`, function () {
-      onError(`Произошла ошибка соединения`);
-    });
-
-    xhr.addEventListener(`timeout`, function () {
-      onError(`Запрос не успел выполниться за ${xhr.timeout} мс`);
-    });
-
-    xhr.timeout = 1000;
-    xhr.open(`POST`, URL);
-    xhr.send(data);
+    let URL = `https://javascript.pages.academy/keksobooking`;
+    createXhr.call(window.upload, onError, onLoad, true, `POST`, URL, data);
   };
-}());
 
-
-(function () {
-  let URL = `https://javascript.pages.academy/keksobooking/data`;
   window.download = function (onError, onLoad) {
+    let URL = `https://javascript.pages.academy/keksobooking/data`;
+    createXhr.call(window.download, onError, onLoad, true, `GET`, URL);
+  };
+
+
+  function createXhr(onError, onLoad, isTimeoutListener, method, URL, data) {
     let xhr = new XMLHttpRequest();
     xhr.responseType = `json`;
+    let windowDownload = this === window.download;
 
     xhr.addEventListener(`load`, function () {
       switch (xhr.status) {
-        case 200: onLoad(xhr.response); break;
-        case 400: onError(`400 Неверный запрос`); break;
-        case 401: onError(`401 Пользователь не авторизован`); break;
-        case 404: onError(`404 Ничего не найдено`); break;
+        case Code.SUCCESS: windowDownload ? onLoad(xhr.response) : onLoad(); break;
+        case Code.WRONG_REQ: onError(`400 Неверный запрос`); break;
+        case Code.NOT_AUTH: onError(`401 Пользователь не авторизован`); break;
+        case Code.NOT_FOUND_ERROR: onError(`404 Ничего не найдено`); break;
         default: onError(`Неизвестный статус ${xhr.status} ${xhr.statustext}`);
       }
     });
@@ -49,12 +38,12 @@
       onError(`Произошла ошибка соединения`);
     });
 
-    xhr.addEventListener(`timeout`, function () {
+    !isTimeoutListener || xhr.addEventListener(`timeout`, function () {
       onError(`Запрос не успел выполниться за ${xhr.timeout} мс`);
     });
 
     xhr.timeout = 1000;
-    xhr.open(`GET`, URL);
-    xhr.send();
-  };
+    xhr.open(method, URL);
+    data ? xhr.send(data) : xhr.send();
+  }
 }());
