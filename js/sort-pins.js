@@ -1,12 +1,11 @@
 (function () {
 
-  let prevTimer;
   let valueToBoolean = {
     'flat': (pin) => pin.offer.type === `flat`,
     'house': (pin) => pin.offer.type === `house`,
     'bungalo': (pin) => pin.offer.type === `bungalo`,
     'middle': (pin) => pin.offer.price >= 10000 && pin.offer.price <= 50000,
-    'low': (pin) => pin.offer.price <= 10000,
+    'low': (pin) => pin.offer.price < 10000,
     'high': (pin) => pin.offer.price > 50000,
     '1r': (pin) => pin.offer.rooms === 1,
     '2r': (pin) => pin.offer.rooms === 2,
@@ -54,37 +53,44 @@
   }
 
   function onChangeFilter() {
-    clearTimeout(prevTimer);
-    prevTimer = setTimeout(() => {
-      /*
-      * Функция упакована в таймаут, чтобы работал дебаунс при частом вызове.
-      * Получаем список отсортированных пинов. Проходимся в цикле по списку всех пинов на карте,
-      * тем пинам которых нет в списке отсортированных добавляем класс hidden.
-      * Потом смотрим, если есть попап, но его пин исчез, то удаляем попап, иначе - оставляем.
-      */
-
-      let allowedPins = sortPins.call(this);
-      for (let i = 0; i < window.map.pinList.children.length; i++) {
-        let child = window.map.pinList.children[i];
-        child.classList.remove(`hidden`);
-        if (child.classList.contains(`map__pin`) && !child.classList.contains(`map__pin--main`)) {
-          let isCoincidence = allowedPins.some((pin) => child.backendName === pin.offer.title);
-          !isCoincidence ? child.classList.add(`hidden`) : false;
-        }
+    /*
+    * Получаем список отсортированных пинов. Проходимся в цикле по списку всех пинов на карте,
+    * тем пинам которых нет в списке отсортированных добавляем класс hidden.
+    * Потом смотрим, если есть попап, но его пин исчез, то удаляем попап, иначе - оставляем.
+    */
+    let allowedPins = sortPins.call(this);
+    for (let i = 0; i < window.map.pinList.children.length; i++) {
+      let child = window.map.pinList.children[i];
+      child.classList.remove(`hidden`);
+      if (child.classList.contains(`map__pin`) && !child.classList.contains(`map__pin--main`)) {
+        let isCoincidence = allowedPins.some((pin) => child.backendName === pin.offer.title);
+        !isCoincidence ? child.classList.add(`hidden`) : false;
       }
+    }
 
-      let popup = document.querySelector(`.popup`);
-      if (popup) {
-        let some = allowedPins.some((pin)=> popup.children[2].textContent === pin.offer.title);
-        !some ? popup.remove() : false;
-      }
-    }, 500);
+    let popup = document.querySelector(`.popup`);
+    if (popup) {
+      let some = allowedPins.some((pin)=> popup.children[2].textContent === pin.offer.title);
+      !some ? popup.remove() : false;
+    }
   }
+
+  function debounce(cb, delay = 500) {
+    let prevTimer;
+    return function () {
+      let self = this;
+      clearTimeout(prevTimer);
+      prevTimer = setTimeout(() => {
+        cb.call(self);
+      }, delay);
+    };
+  }
+
 
   /*
   * Слушатель на изменения фильтров, делает сортировку нужных пинов
   */
-  window.map.filterContainer.addEventListener(`change`, onChangeFilter);
+  window.map.filterContainer.addEventListener(`change`, debounce(onChangeFilter, 700));
 
 }());
 

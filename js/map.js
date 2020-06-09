@@ -72,13 +72,16 @@ window.Keyboard = {
     window.map.noticeForm.classList.remove(`notice__form--disabled`);
     formSections.forEach((fieldset) => fieldset.disabled = false);
 
-    window.pin.loadPinsOnMap(window.data.loadedPins); // Ставим скаченные пины на карту
+    try {
+      window.pin.loadPinsOnMap(window.data.loadedPins); // Ставим скаченные пины на карту
+    } catch (e) { /* ничего не делаем если пины не подгрузились*/ }
 
     window.map.mainPinButton.removeEventListener(`mouseover`, onMainPinMouseover);
     window.map.pinList.addEventListener(`click`, window.pin.onRandomPinClick);
     for (let i = 0; i < window.map.pinList.children.length; i++) {
       window.map.pinList.children[i].addEventListener(`keydown`, window.pin.onRandomPinClick);
     }
+    window.dragUpload(); // разрешаем dragNdrop на форме
   }
 
 

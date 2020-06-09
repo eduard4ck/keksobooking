@@ -198,10 +198,13 @@
         </fieldset>
 
         <fieldset class="form__element form__element--wide">
-          <label>Фотографии жилья</label>
+          <label>Фотографии жилья &#8195;
+            <progress id="progress-bar" value=0 max=100></progress>
+            <span></span>
+          </label>
           <div class="form__photo-container">
             <div class="upload">
-              <input type="file" id="images">
+              <input type="file" id="images" multiple="multiple">
               <label for="images" class="drop-zone">Загрузите или&nbsp;перетащите сюда фото</label>
             </div>
           </div>
@@ -269,6 +272,7 @@
   <script src="js/pin.js"></script>
   <script src="js/show-card.js"></script>
   <script src="js/synchronize-fields.js"></script>
+  <script src="js/drag-upload.js"></script>
   <script src="js/map.js"></script>
   <script src="js/sort-pins.js"></script>
   <script src="js/form.js"></script>
